@@ -14,27 +14,10 @@
 </head>
 <body>
     <h1>Weather and Map</h1>
-    <h2>My Widget Title</h2>
-    <section>
-        <p>This is some random text for the widget. Replace this text with your custom content later.</p>
-    </section>
     <form method="post">
         <input type="text" name="city" placeholder="Enter city name" required>
         <button type="submit">Get Weather</button>
     </form>
-    
-{% if city and latlon %}  <!-- Check if a city was entered -->
-        <p>City: {{ city.capitalize() }}</p>
-        <p>Longitude: {{ latlon }}</p>
-
-        <a class="weatherwidget-io" href="https://forecast7.com/en/{{ latlon }}/{{ city.lower() }}/" data-label_1=city data-label_2="WEATHER" data-theme="original" >BELLEVUE WEATHER</a>
-        <script>
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-        </script>
-    
-    {% elif weather is none and request.method == 'POST' %}
-        <p>city not found. Please try again again.</p>
-    {% endif %}
 
     {% if weather %}
         <h2>Weather in {{ weather['name'] }}</h2>
@@ -65,6 +48,5 @@
       })();
       {% endif %}
     </script>
-
 </body>
 </html>

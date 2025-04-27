@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather and Map of A City</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 400px;
+        margin-top: 20px;
+      }
+    </style>
+</head>
+<body>
+    <h1>Weather and Map</h1>
+    <h2>My Widget Title</h2>
+    <section>
+        <p>This is some random text for the widget. Replace this text with your custom content later.</p>
+    </section>
+    <form method="post">
+        <input type="text" name="city" placeholder="Enter city name2" required>
+        <button type="submit">Get Weather2</button>
+    </form>
+    
+    <h2>Enter a City Name:</h2>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="updateWeatherWidget()">Get Weather</button>
+
+    <br><br>
+
+    <!-- Weather Widget -->
+    <a id="weatherWidget" class="weatherwidget-io"
+       href="https://forecast7.com/en/47d61n122d20/bellevue/" 
+       data-label_1="City"
+       data-label_2="Weather Forecast"
+       data-theme="pure">
+        City Weather Forecast
+    </a>
+
+    <script>
+        function updateWeatherWidget() {
+            //let city = document.getElementById("cityInput").value.trim();
+            let city = document.getElementById("city").value.trim();
+            if (city === "") {
+                alert("Please enter a city name!");
+                //return;
+                city = "Seattle";
+            }
+            alert("Got a city name!");
+            // Convert city name into a URL-friendly format (e.g., "New York" → "new-york")
+            let cityUrl = city.toLowerCase().replace(/\s+/g, '-');
+
+            // Update widget href and labels
+            let widget = document.getElementById("weatherWidget");
+            widget.href = `https://forecast7.com/en/${cityUrl}/`;
+            widget.setAttribute("data-label_1", city);
+            widget.innerText = `${city} Weather Forecast`;
+
+            // Remove and reload the widget script to reflect changes
+            let existingScript = document.getElementById("weatherwidget-io-js");
+            if (existingScript) {
+                existingScript.remove();
+            }
+            let script = document.createElement("script");
+            script.id = "weatherwidget-io-js";
+            script.src = "https://weatherwidget.io/js/widget.min.js";
+            document.body.appendChild(script);
+        }
+    </script>
+
+    <!-- Weather Widget Script -->
+    <script>
+        !function(d,s,id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://weatherwidget.io/js/widget.min.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }
+        }(document, "script", "weatherwidget-io-js");
+    </script>
+
+    {% if weather %}
+        <h2>Weather in {{ weather['name'] }}</h2>
+        <p>Temperature: {{ weather['main']['temp'] }}°C</p>
+        <p>Condition: {{ weather['weather'][0]['description'].capitalize() }}</p>
+        <p>Humidity: {{ weather['main']['humidity'] }}%</p>
+        <p>Wind Speed: {{ weather['wind']['speed'] }} m/s</p>
+        <!-- Map container -->
+        <div id="map"></div>
+    {% elif weather is none and request.method == 'POST' %}
+        <p>City not found. Please try again.</p>
+    {% endif %}
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      // Only render map if weather was retrieved and contains coordinates
+      {% if weather and weather['coord'] %}
+      (function() {
+          var lat = {{ weather['coord']['lat'] }};
+          var lon = {{ weather['coord']['lon'] }};
+          var map = L.map('map').setView([lat, lon], 13);
+          
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+          
+          L.marker([lat, lon]).addTo(map);
+      })();
+      {% endif %}
+    </script>
+</body>
+</html>

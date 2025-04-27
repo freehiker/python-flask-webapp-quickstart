@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+</head>
+<body>
+    <h1>Weather Widget</h1>
+    <form method="post">
+        <input type="text" name="city" placeholder="Enter city name" required>
+        <button type="submit">Get Weather</button>
+    </form>
+
+    {% if weather %}
+        <h2>Weather in {{ weather['name'] }}</h2>
+        <p>Temperature: {{ weather['main']['temp'] }}°C</p>
+        <p>Condition: {{ weather['weather'][0]['description'].capitalize() }}</p>
+        <p>Humidity: {{ weather['main']['humidity'] }}%</p>
+        <p>Wind Speed: {{ weather['wind']['speed'] }} m/s</p>
+    {% elif weather is none and request.method == 'POST' %}
+        <p>City not found. Please try again.</p>
+    {% endif %}
+</body>
+</html>
