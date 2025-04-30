@@ -3,12 +3,14 @@ import requests, re, random, textwrap
 
 app = Flask(__name__)
 
+# Our awesome website:
+# https://app-web-sy42efadrrcsa.azurewebsites.net/
 # API keys
 api_list = [
-    #'e1dbe9135bb64625a8de84756accc2f6',
-    #'7c7e71b239a14d84823f413d211a759c',
-    #'115492a3218a47f6b5a75ece2a5d10de',
-    #'3a6b5d690ca245e3be8b82525a080b02',
+    'e1dbe9135bb64625a8de84756accc2f6',
+    '7c7e71b239a14d84823f413d211a759c',
+    '115492a3218a47f6b5a75ece2a5d10de',
+    '3a6b5d690ca245e3be8b82525a080b02',
     '95b7b6cb16314c42b4c6fc4073cb1f3d'
 ]
 
@@ -34,7 +36,7 @@ def index():
         num = request.form.get('num', '5').strip()
         if not num.isdigit() or int(num) <= 0:
             num = '5'
-        api_key = random.choice(api_list)
+        api_key = random.choice(api_list) # Randomly select an API key (we have 250 api keys cool right?)!!!!! :D :D :D :D :D :D :D :D :D :D :D :D :D :D :D
         headers = {'x-api-key': api_key}
         params = {
             'query': query,
@@ -123,7 +125,7 @@ TEMPLATE = """
 </head>
 <body>
     <form method="post">
-        <label>What would you like to find? (do not leave blank):<br>
+        <label>What would you like to eat? (eg. cake)<br>
             <input type="text" name="query" required style="width:300px;">
         </label><br><br>
         <label>Allergies (separate by spaces):<br>
@@ -184,7 +186,7 @@ TEMPLATE = """
     {% endif %}
     <footer style="text-align: center; padding: 12px; background-color: #333366; color: #fff; margin-top: 32px;">
         <div>
-        <strong>Hack-a-thon project: SafeBite</strong><br>
+        <strong>Hack-a-thon project: SafeBite Recipe Finder</strong><br>
         Creators: Phil Feng, Nicole Zhang, Jasmine Zhan<br>
         Launched on: 4/28/2025<br>
         </div>
@@ -196,5 +198,3 @@ TEMPLATE = """
 
 if __name__ == '__main__':
     app.run(debug=True)
-# To run the app, save this code in a file named `app.py` and run it using the command:
-# python app.py
